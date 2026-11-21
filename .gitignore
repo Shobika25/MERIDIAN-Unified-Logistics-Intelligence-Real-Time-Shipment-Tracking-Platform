@@ -1,0 +1,30 @@
+﻿# Secrets and credentials
+.secrets/
+.env
+.env.*
+*.pem
+*.key
+
+# Generated binaries and build output
+*.jar
+*.class
+target/
+jars/
+
+# Spark and Iceberg runtime data
+warehouse/
+spark-warehouse/
+metastore_db/
+derby.log
+logs/
+*.log
+
+# IDE files
+.idea/
+*.iml
+.bsp/
+.metals/
+
+# OS files
+.DS_Store
+Thumbs.db
