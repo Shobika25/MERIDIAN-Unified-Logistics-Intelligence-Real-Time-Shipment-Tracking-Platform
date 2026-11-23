@@ -4,7 +4,19 @@ umask 077
 
 mkdir -p /tmp/hadoop-conf /tmp/ivy
 
-TOKEN="${AZURE_SAS_TOKEN:?Set AZURE_SAS_TOKEN before starting the container}"
+if [ -r /run/secrets/adls-sas.txt ]; then
+  TOKEN="$(tr -d '\r\n' < /run/secrets/adls-sas.txt)"
+elif [ -n "${AZURE_SAS_TOKEN:-}" ]; then
+  TOKEN="$AZURE_SAS_TOKEN"
+else
+  echo "ERROR: ADLS SAS secret file is missing and AZURE_SAS_TOKEN is unset" >&2
+  exit 1
+fi
+
+if [ -z "$TOKEN" ]; then
+  echo "ERROR: ADLS SAS token is empty" >&2
+  exit 1
+fi
 TOKEN_XML="$(printf '%s' "$TOKEN" | sed 's/&/\&amp;/g')"
 
 cat > /tmp/hadoop-conf/core-site.xml <<EOF
